@@ -13,5 +13,6 @@ classdef Flow
 		    obj.velocity = velocity;
 		    obj.heatCapacity = heatCapacity;
 		    obj.density = density;
+        end
     end
 end
