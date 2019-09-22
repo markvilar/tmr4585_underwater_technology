@@ -2,28 +2,32 @@ classdef Pipeline
     properties
         designPressure
         testPressure
+        incidentPressure
         flow
-        tubes
-        groundConditions
+        tube
         connections
+        soil
+        offshoreSpectras
+        inshoreSpectras
+        current
     end
+    
     methods
-	    function obj = Pipeline(designPressure, testPressure, flow, tubes, groundConditions, connections)
+	    function obj = Pipeline(designPressure, testPressure, ...
+                incidentPressure, flow, tube, connections, soil, ...
+                offshoreSpectras, inshoreSpectras, current)
 		    obj.designPressure = designPressure;
 		    obj.testPressure = testPressure;
+            obj.incidentPressure = incidentPressure;
             obj.flow = flow;
-		    obj.tubes = tubes;
-		    obj.groundConditions = groundConditions;
+		    obj.tube = tube;
 		    obj.connections = connections;
+            obj.soil = soil;
+            obj.offshoreSpectras = offshoreSpectras;
+            obj.inshoreSpectras = inshoreSpectras;
+            obj.current = current;
         end
-        function calcSafetyClasses(obj)
-            fluidClass = obj.flow.fluidClass;
-            n = length(obj.connections);
-            for i = 1:n
-                connection = obj.connections(i);
-                
-            end
-        end
+        
         function burstingResults = burstingCriterion(obj)
             
         end

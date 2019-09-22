@@ -5,6 +5,7 @@ classdef Material
         yieldStress
         tensileStrength
     end
+    
     methods
 	    function obj = Material(tolerance, density, yieldStress, tensileStrength)
 		    obj.tolerance = tolerance;

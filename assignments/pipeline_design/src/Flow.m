@@ -6,13 +6,15 @@ classdef Flow
         heatCapacity
         density
     end
+    
     methods
-	    function obj = Flow(class, temperature, velocity, heatCapacity, density)
-		    obj.fluidClass = class;
-		    obj.inletTemperature = temperature;
-		    obj.velocity = velocity;
+	    function obj = Flow(fluidClass, inletTemperature, velocity, ...
+                heatCapacity, density)
+		    obj.fluidClass = fluidClass;
+            obj.inletTemperature = inletTemperature;
+            obj.velocity = velocity;
 		    obj.heatCapacity = heatCapacity;
-		    obj.density = density;
+            obj.density = density;
         end
     end
 end
