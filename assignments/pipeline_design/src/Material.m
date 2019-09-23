@@ -1,17 +1,22 @@
 classdef Material
     properties
+        allowance
         tolerance
         density
-        yieldStress
-        tensileStrength
+        yield
+        tensile
+        thermCon
     end
     
     methods
-	    function obj = Material(tolerance, density, yieldStress, tensileStrength)
+	    function obj = Material(allowance, tolerance, density, yield, tensile, ...
+                thermCon)
+            obj.allowance = allowance;
 		    obj.tolerance = tolerance;
 		    obj.density = density;
-		    obj.yieldStress = yieldStress;
-		    obj.tensileStrength = tensileStrength;
+		    obj.yield = yield;
+		    obj.tensile = tensile;
+            obj.thermCon = thermCon;
 	    end
     end
 end
