@@ -1,5 +1,5 @@
 %% Initialization of objects
-[pipeSegments, flow] = initDesign();
+[pipeSegments, flow, targets] = initDesign();
 [soil, osSpectras, isSpectras, current] = initEnvironment();
 
 %% General constants
@@ -13,6 +13,13 @@ designRef = 20; % m
 designDens = 300; % kg/m^3
 
 %% Test condition
-testPress = 4/3 * designPress; % Pa
+testPress = 4/3*designPress; % Pa
 testRef = 20; % m
 testDens = 1000; % kg/m^3
+
+%% Burst criterion
+% Design criterion
+calcBurstingCriterion(pipeSegments, flow, targets, Po, rho, designDens, ...
+    gravity, designPress, designRef, 10)
+
+% Test criterion

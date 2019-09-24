@@ -1,8 +1,8 @@
-function [pipeSegments, flow] = initDesign()
+function [pipeSegments, flow, targets] = initDesign()
 %% Corrosion coating
-corrThick = 0;
-corrDens = 0;
-corrThermCon = 0;
+corrThick = 2*10^(-3); % m
+corrDens = 1100; % kg/m^3
+corrThermCon = 0.2; % W/m/K
 
 coating = Coating(corrThick, corrDens, corrThermCon);
 
@@ -43,7 +43,7 @@ seg6 = PipeSegment(kp115, kp150, false, innerD, ovality, material, coating);
 pipeSegments = [seg1, seg2, seg3, seg4, seg5, seg6];
 
 %% Flow
-fluidClass = "E";
+fluidClass = 5;
 inletTemperature = 80 + 273; % K
 velocity = 5; % m/s
 heatCapacity = 2000; % J/kg/K
@@ -51,4 +51,8 @@ density = 250; % kg/m^3
 
 flow = Flow(fluidClass, inletTemperature, velocity, heatCapacity, density);
 
+%% Platform and factory location
+target1 = [0, 20];
+target2 = [150000, 20];
+targets = [target1; target2];
 end
