@@ -18,8 +18,23 @@ testRef = 20; % m
 testDens = 1000; % kg/m^3
 
 %% Burst criterion
-% Design criterion
-calcBurstingCriterion(pipeSegments, flow, targets, Po, rho, designDens, ...
-    gravity, designPress, designRef, 10)
+nSamples = [20, 10, 10, 10, 10, 20];
 
-% Test criterion
+% Design bursting criterion
+designTs = calcBurstingCriterion(pipeSegments, flow, targets, Po, rho, ...
+    designDens, gravity, designPress, designRef, nSamples);
+
+% Test bursting criterion
+testTs = calcBurstingCriterion(pipeSegments, flow, targets, Po, rho, ...
+    testDens, gravity, testPress, testRef, nSamples);
+
+% Get maximum thicknesses
+nSegs = length(designTs);
+designMaxTs = zeros(nSegs, 1);
+testMaxTs = zeros(nSegs, 1);
+for n = 1:nSegs
+    designT = designTs{n};
+    testT = testTs{n};
+    designMaxTs(n) = max(designT);
+    testMaxTs(n) = max(testT);
+end

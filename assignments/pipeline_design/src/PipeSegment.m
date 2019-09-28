@@ -48,17 +48,16 @@ classdef PipeSegment
             y = ya + frac*delY;
         end
         
-        function minDist = minDistToTargets(obj, frac, targets)
+        function minHDist = minHDistToTargets(obj, frac, targets)
             [x, y] = obj.getXY(frac);
             n = length(targets);
-            dists = zeros(1,n);
+            hDists = zeros(1,n);
             for i = 1:length(targets)
                 target = targets(i,:);
                 xt = target(1);
-                yt = target(2);
-                dists(i) = sqrt((x-xt)^2 + (y-yt)^2);
+                hDists(i) = abs(xt-x);
             end
-            minDist = min(dists);
+            minHDist = min(hDists);
         end
         
         function safeClass = getSafetyClass(~, locClass, fluidClass)
@@ -85,10 +84,12 @@ classdef PipeSegment
             end
         end
         
-        function [alphaMpt, alphaSpt] = getResistFactors(obj, dist, fluidClass)
+        function [alphaMpt, alphaSpt] = getResistFactors(obj, hDist, fluidClass)
             % Returns the pipeline resistance factors based on the
             % safety class according to DNV-OS-F101 table 5-9.
-            if dist < 500 || (~obj.offshore)
+            % arg hDist: float
+            % arg fluidClass: int
+            if hDist < 500 || (~obj.offshore)
                 locClass = 2;
             else
                 locClass = 1;
