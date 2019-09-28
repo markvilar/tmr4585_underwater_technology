@@ -84,7 +84,7 @@ classdef PipeSegment
             end
         end
         
-        function [alphaMpt, alphaSpt] = getResistFactors(obj, hDist, fluidClass)
+        function [alphaMpt, alphaSpt, gammas] = getResistFactors(obj, hDist, fluidClass)
             % Returns the pipeline resistance factors based on the
             % safety class according to DNV-OS-F101 table 5-9.
             % arg hDist: float
@@ -111,6 +111,7 @@ classdef PipeSegment
                     alphaMpt = 1.251;
                     alphaSpt = 1.05;
             end
+            gammas = 2*alphaMpt/(0.96*sqrt(3)); % Eq. from table 5-9
         end
     end
 end

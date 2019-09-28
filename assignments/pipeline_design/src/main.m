@@ -38,3 +38,10 @@ for n = 1:nSegs
     designMaxTs(n) = max(designT);
     testMaxTs(n) = max(testT);
 end
+
+%% Buckling arrestor criterion
+alphaFab = 1.00;
+Pmin = Po;
+
+bucklingArrestors = calcArrestorCriterion(pipeSegments, flow, targets, ...
+    Po, rho, gravity, Pmin, alphaFab, designMaxTs, nSamples);
