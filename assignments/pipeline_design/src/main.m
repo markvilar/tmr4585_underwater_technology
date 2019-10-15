@@ -26,4 +26,4 @@ testDens = 1000; % kg/m^3
 %% Tasks
 run('task1.m')
 run('task2.m')
-run('task3.m')
+%   run('task3.m')
