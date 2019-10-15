@@ -11,6 +11,10 @@ classdef Coating
             obj.density = density;
             obj.thermCon = thermCon;
         end
+        
+        function t = getThickness(obj)
+            t = obj.thickness;
+        end
     end
 end
 

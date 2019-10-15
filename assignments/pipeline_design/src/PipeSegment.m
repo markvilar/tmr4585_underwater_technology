@@ -2,23 +2,36 @@ classdef PipeSegment
     properties
         startConn
         endConn
-        offshore
+        isOffshore
         innerD
+        t
         ovality
         material
         corrCoat
+        concCoat
+        isRiser
     end
     
     methods
-        function obj = PipeSegment(startConn, endConn, offshore, ...
-                innerD, ovality, material, corrCoat)
+        function obj = PipeSegment(startConn, endConn, isOffshore, ...
+                innerD, ovality, material, corrCoat, concCoat, isRiser)
             obj.startConn = startConn;
             obj.endConn = endConn;
-            obj.offshore = offshore;
+            obj.isOffshore = isOffshore;
             obj.innerD = innerD;
             obj.ovality = ovality;
             obj.material = material;
             obj.corrCoat = corrCoat;
+            obj.concCoat = concCoat;
+            obj.isRiser = isRiser;
+            obj.t = -1;
+        end
+        
+        function obj = setT(obj, t)
+            if t <= 0
+                error("Wall thickness cannot be zero or negative.")
+            end
+            obj.t = t;
         end
         
         function mat = getMaterial(obj)
@@ -89,7 +102,7 @@ classdef PipeSegment
             % safety class according to DNV-OS-F101 table 5-9.
             % arg hDist: float
             % arg fluidClass: int
-            if hDist < 500 || (~obj.offshore)
+            if hDist < 500 || (~obj.isOffshore)
                 locClass = 2;
             else
                 locClass = 1;
@@ -112,6 +125,12 @@ classdef PipeSegment
                     alphaSpt = 1.05;
             end
             gammas = 2*alphaMpt/(0.96*sqrt(3)); % Eq. from table 5-9
+        end
+        
+        function D = calcDiameter(obj)
+            tCorr = obj.corrCoat.getThickness();
+            tConc = obj.concCoat.getThickness();
+            D = obj.innerD + 2*obj.t + 2*tCorr + 2*tConc;
         end
     end
 end

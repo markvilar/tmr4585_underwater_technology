@@ -4,7 +4,14 @@ corrThick = 2*10^(-3); % m
 corrDens = 1100; % kg/m^3
 corrThermCon = 0.2; % W/m/K
 
-coating = Coating(corrThick, corrDens, corrThermCon);
+corrCoating = Coating(corrThick, corrDens, corrThermCon);
+
+%% Concrete coating
+concThick = 45*10^(-3); % m
+concDens = 3000; % kg/m^3 2200-3000
+concThermCon = 0.5; % W/m/K
+
+concCoating = Coating(concThick, concDens, concThermCon);
 
 %% Material
 allowance = 5*10^(-3); % m
@@ -31,14 +38,20 @@ kp150 = Connection(150000, 20);
 innerD = 406.4*10^(-3); % m
 ovality = 0.005; % -
 
-% PipeSegment(startConn, endConn, offshore, innerD, ovality, material, ...
-%       corrCoat)
-seg1 = PipeSegment(kp000, kp001, true, innerD, ovality, material, coating);
-seg2 = PipeSegment(kp001, kp090, true, innerD, ovality, material, coating);
-seg3 = PipeSegment(kp090, kp100, true, innerD, ovality, material, coating);
-seg4 = PipeSegment(kp100, kp105, false, innerD, ovality, material, coating);
-seg5 = PipeSegment(kp105, kp115, false, innerD, ovality, material, coating);
-seg6 = PipeSegment(kp115, kp150, false, innerD, ovality, material, coating);
+% PipeSegment(startConn, endConn, isOffshore, innerD, ovality, material, ...
+%       corrCoat, concCoat, isRiser)
+seg1 = PipeSegment(kp000, kp001, true, innerD, ovality, material, ...
+    corrCoating, concCoating, true);
+seg2 = PipeSegment(kp001, kp090, true, innerD, ovality, material, ...
+    corrCoating, concCoating, false);
+seg3 = PipeSegment(kp090, kp100, true, innerD, ovality, material, ...
+    corrCoating, concCoating, false);
+seg4 = PipeSegment(kp100, kp105, false, innerD, ovality, material, ...
+    corrCoating, concCoating, false);
+seg5 = PipeSegment(kp105, kp115, false, innerD, ovality, material, ...
+    corrCoating, concCoating, false);
+seg6 = PipeSegment(kp115, kp150, false, innerD, ovality, material, ...
+    corrCoating, concCoating, false);
 
 pipeSegments = [seg1, seg2, seg3, seg4, seg5, seg6];
 
