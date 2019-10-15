@@ -39,8 +39,8 @@ classdef PipeSegment
         end
         
         function [fy, fu] = getMaterialStrength(obj)
-            fy = obj.material.yield;
-            fu = obj.material.tensile;
+            fy = obj.material.SMYS;
+            fu = obj.material.SMYT;
         end
         
         function d = getInnerDiameter(obj)
