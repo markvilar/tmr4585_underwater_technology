@@ -4,7 +4,7 @@ classdef Material
         tolerance
         density
         SMYS
-        tensile
+        SMYT
         thermCon
     end
     
@@ -15,7 +15,7 @@ classdef Material
 		    obj.tolerance = tolerance;
 		    obj.density = density;
 		    obj.SMYS = SMYS;
-		    obj.tensile = SMYT;
+		    obj.SMYT = SMYT;
             obj.thermCon = thermCon;
 	    end
     end
