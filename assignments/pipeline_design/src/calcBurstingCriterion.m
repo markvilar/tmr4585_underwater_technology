@@ -1,5 +1,5 @@
-function tMins = calcBurstingCriterion(segments, flow, targets, Po, ...
-    rhoE, rhoI, g, Pref, yref, nSamples)
+function tMins = calcBurstingCriterion(segments, fluidClass, targets, ...
+    Po, rhoE, rhoI, g, Pref, yref, nSamples)
 % Calculates the minimum pipe steel wall thickness according to 
 % DNV-OS-F101 section 5D.
 % arg segments: Nx1 array of PipeSegment objects
@@ -15,7 +15,6 @@ function tMins = calcBurstingCriterion(segments, flow, targets, Po, ...
 % return: cell array of vectors, the minimum thicknesses along each segment
 assert(length(segments) == length(nSamples), "Number of segments and amount " ...
     + "sample points must be the same.");
-fluidClass = flow.getFluidClass();
 N = length(segments);
 tMins = cell(N,1);
 for i = 1:N

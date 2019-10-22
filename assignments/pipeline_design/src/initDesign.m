@@ -26,8 +26,8 @@ material = Material(allowance, tolerance, density, yield, tensile, ...
 
 %% Connections
 % Connection(x, y)
-kp000 = Connection(0, 20);
-kp001 = Connection(0, -300);
+kp000 = Connection(0, -300);
+kp001 = Connection(500, -300);
 kp090 = Connection(90000, -300);
 kp100 = Connection(100000, -100);
 kp105 = Connection(105000, -100);

@@ -15,13 +15,15 @@ gravity = 9.81; % m/s^2
 
 %% Design condition
 designPress = 25*10^6; % Pa
-designRef = 20; % m
 designDens = 300; % kg/m^3
+
+%% Incidental condition
+incPress = 1.33*designPress;
 
 %% Test condition
 testPress = 4/3*designPress; % Pa
-testRef = 20; % m
 testDens = 1000; % kg/m^3
+refHeight = 20; % m
 
 %% Tasks
 run('task1.m')

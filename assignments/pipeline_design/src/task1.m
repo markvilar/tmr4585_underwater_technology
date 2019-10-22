@@ -2,12 +2,12 @@
 nSamples = [20, 10, 10, 10, 10, 20];
 
 % Design bursting criterion
-designTs = calcBurstingCriterion(pipeSegments, flow, targets, Po, rhoSw, ...
-    designDens, gravity, designPress, designRef, nSamples);
+designTs = calcBurstingCriterion(pipeSegments, 5, targets, Po, rhoSw, ...
+    designDens, gravity, incPress, refHeight, nSamples);
 
 % Test bursting criterion
-testTs = calcBurstingCriterion(pipeSegments, flow, targets, Po, rhoSw, ...
-    testDens, gravity, testPress, testRef, nSamples);
+testTs = calcBurstingCriterion(pipeSegments, 1, targets, Po, rhoSw, ...
+    testDens, gravity, testPress, refHeight, nSamples);
 
 % Get maximum thicknesses for each segment for design and test
 nSegs = length(pipeSegments);
@@ -22,5 +22,5 @@ for n = 1:nSegs
     testMaxTs(n) = max(testT);
     maxTs(n) = max(designMaxTs(n), testMaxTs(n));
     minTs(n) = min(designMaxTs(n), testMaxTs(n));
-    pipeSegments(n) = pipeSegments(n).setT(maxTs(n));
+    pipeSegments(n) = pipeSegments(n).setT(maxTs(n)); % set 
 end
