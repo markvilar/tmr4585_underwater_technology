@@ -23,3 +23,6 @@ calcBurstingCriterion(pipeSegments, flow, targets, Po, rho, designDens, ...
     gravity, designPress, designRef, 10)
 
 % Test criterion
+
+%% Lateral stability
+[latParams] = calcLateralStability(submergedWeight, rho, gravity, soil );

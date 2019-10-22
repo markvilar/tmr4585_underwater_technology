@@ -3,6 +3,7 @@ classdef Jonswap
         returnPeriods;
         waveHeights;
         peakPeriods;
+        spectrum;
     end
     
     methods
@@ -15,6 +16,7 @@ classdef Jonswap
                 obj.returnPeriods = returnPeriods;
                 obj.waveHeights = waveHeights;
                 obj.peakPeriods = peakPeriods;
+                obj.spectrum = 
             end
         end
     end

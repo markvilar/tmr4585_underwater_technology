@@ -96,8 +96,7 @@ classdef PipeSegment
             safeClass = obj.getSafetyClass(locClass, fluidClass);
             switch safeClass
                 case 1
-                    alphaMpt = 1.000;
-                    alphaSpt = 1.03;
+                    
                 case 2
                     alphaMpt = 1.088;
                     alphaSpt = 1.05;
