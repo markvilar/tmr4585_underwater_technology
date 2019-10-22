@@ -16,9 +16,10 @@ density = 7850; % kg/m^3
 SMYS = 450*10^6; % Pa
 SMYT = 1.15*SMYS; % Pa
 thermCon = 43; % W/m/K
+gammaM = 1.15;
 
 material = Material(allowance, tolerance, density, SMYS, SMYT, ...
-    thermCon);
+    thermCon, gammaM);
 
 %% Connections
 % Connection(x, y)

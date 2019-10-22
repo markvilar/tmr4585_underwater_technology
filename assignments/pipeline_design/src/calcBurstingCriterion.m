@@ -26,13 +26,15 @@ for i = 1:N
     Di = segment.getInnerDiameter();
     for j = 1:nSample
         frac = (j-1)*(1/(nSample-1));
-        [x, y] = segment.getXY(frac);
+        [~, y] = segment.getXY(frac);
         hDdist = segment.minHDistToTargets(frac, targets);
-        [alphaMpt, alphaSpt, gammas] = segment.getResistFactors(hDdist, ...
+        [gammaM, gammaSC] = segment.getResistFactors(hDdist, ...
             fluidClass);
         Pe = Po - rhoE*g*min(y, 0); % External pressure
-        Pi = Pref - rhoI*g*(y - yref); % Internal pressure
-        ts(j) = (alphaMpt*Di)*(Pi-Pe) / (2*0.96*fcb); % Eq. 5.7, 5.8 and table 5-9
+        Pli = Pref - rhoI*g*(y - yref); % local incidental pressure
+        
+        ts(j) = sqrt(3)*gammaM*gammaSC*(Pli-Pe)*(Di+2*segment.tCorr) ...
+            / (4*fcb - sqrt(3)*1.2*(Pli-Pe)*gammaM*gammaSC);
     end
     tMins{i} = ts;
 end

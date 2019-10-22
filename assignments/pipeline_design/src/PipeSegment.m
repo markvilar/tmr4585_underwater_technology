@@ -14,6 +14,7 @@ classdef PipeSegment
         tConc % Concrete thickness
         rhoConc % Concrete density
         kConc % Concrete thermal conductivity
+        gammaSC % Safety class resistance factor
     end
     
     methods
@@ -83,6 +84,7 @@ classdef PipeSegment
         end
         
         function safeClass = getSafetyClass(~, locClass, fluidClass)
+            %table 2-4 
             if locClass == 1
                 switch fluidClass
                     case {1,3}
@@ -106,7 +108,7 @@ classdef PipeSegment
             end
         end
         
-        function [alphaMpt, alphaSpt, gammas] = getResistFactors(obj, hDist, fluidClass)
+        function [gammaM, gammaSC] = getResistFactors(obj, hDist, fluidClass)
             % Returns the pipeline resistance factors based on the
             % safety class according to DNV-OS-F101 table 5-9.
             % arg hDist: float
@@ -119,21 +121,15 @@ classdef PipeSegment
             safeClass = obj.getSafetyClass(locClass, fluidClass);
             switch safeClass
                 case 1
-                    alphaMpt = 1.000;
-                    alphaSpt = 1.03;
+                    gammaSC = 1.046;
                 case 2
-                    alphaMpt = 1.088;
-                    alphaSpt = 1.05;
+                    gammaSC = 1.138;
                 case 3
-                    alphaMpt = 1.251;
-                    alphaSpt = 1.05;
+                    gammaSC = 1.308;
                 otherwise
-                    disp("Undefined pipe segment safety class, " ...
-                        + "using the most conservative parameters.")
-                    alphaMpt = 1.251;
-                    alphaSpt = 1.05;
+                    gammaSC = 1.308;
             end
-            gammas = 2*alphaMpt/(0.96*sqrt(3)); % Eq. from table 5-9
+            gammaM = obj.material.gammaM;
         end
         
         function t1 = calcT1(obj, operational)
