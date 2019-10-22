@@ -25,7 +25,12 @@ testPress = 4/3*designPress; % Pa
 testDens = 1000; % kg/m^3
 refHeight = 20; % m
 
+%% Installation condition 
+installPress = 0; %Pa
+installRef = 20; % m
+installDens = 1.2; % kg/m^3
+
 %% Tasks
 run('task1.m')
 run('task2.m')
-run('task3.m')
+%   run('task3.m')

@@ -17,11 +17,11 @@ concCoating = Coating(concThick, concDens, concThermCon);
 allowance = 5*10^(-3); % m
 tolerance = 0.10; % -
 density = 7850; % kg/m^3
-yield = 450*10^6; % Pa
-tensile = 1.15*yield; % Pa
+SMYS = 450*10^6; % Pa
+SMYT = 1.15*SMYS; % Pa
 thermCon = 43; % W/m/K
 
-material = Material(allowance, tolerance, density, yield, tensile, ...
+material = Material(allowance, tolerance, density, SMYS, SMYT, ...
     thermCon);
 
 %% Connections
