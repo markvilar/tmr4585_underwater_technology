@@ -21,17 +21,18 @@ for i = 1:nSegs
     nSample = nSamples(i);
     [fy, fu] = segment.getMaterialStrength();
     Di = segment.getInnerDiameter();
-    t = ts(i);
+    % Get relevant thickness
+    t2 = segment.calcT2(false);
     result = true(nSample, 1);
     for j = 1:nSample
         frac = (j-1)*(1/(nSample-1));
-        [x, y] = segment.getXY(frac);
+        [~, y] = segment.getXY(frac);
         hDdist = segment.minHDistToTargets(frac, targets);
-        [alphaMpt, alphaSpt, gammas] = segment.getResistFactors(hDdist, ...
+        [gammaM, gammaSC] = segment.getResistFactors(hDdist, ...
             fluidClass);
         Pe = Po - rhoE*g*min(y, 0);
-        Ppr = 35*fy*alphaFab*(t/Di)^(2.5); % Eq. 5.16
-        result(j) = ~((Pe - Pmin) <= Ppr/gammas); % Eq. 5.15
+        Ppr = 35*fy*alphaFab*(t2/Di)^(2.5); % Eq. 5.16
+        result(j) = ~((Pe - Pmin) <= Ppr/(gammaM*gammaSC)); % Eq. 5.15
     end
     results{i} = result;
 end

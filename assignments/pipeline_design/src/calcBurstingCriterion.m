@@ -31,8 +31,7 @@ for i = 1:N
         [gammaM, gammaSC] = segment.getResistFactors(hDdist, ...
             fluidClass);
         Pe = Po - rhoE*g*min(y, 0); % External pressure
-        Pli = Pref - rhoI*g*(y - yref); % local incidental pressure
-        
+        Pli = Pref - rhoI*g*(y - yref); % Local incidental pressure
         ts(j) = sqrt(3)*gammaM*gammaSC*(Pli-Pe)*(Di+2*segment.tCorr) ...
             / (4*fcb - sqrt(3)*1.2*(Pli-Pe)*gammaM*gammaSC);
     end
