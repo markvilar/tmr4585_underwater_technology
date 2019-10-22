@@ -3,7 +3,7 @@ function tMins = calcBurstingCriterion(segments, fluidClass, targets, ...
 % Calculates the minimum pipe steel wall thickness according to 
 % DNV-OS-F101 section 5D.
 % arg segments: Nx1 array of PipeSegment objects
-% arg flow: Flow object
+% arg fluidClass: int
 % arg targets: Mx2 array, human locations
 % arg po: float, atmospheric pressure
 % arg rhoE: float, sea water density

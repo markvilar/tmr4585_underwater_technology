@@ -3,31 +3,40 @@ classdef PipeSegment
         startConn
         endConn
         isOffshore
-        innerD
-        t
-        ovality
-        material
-        corrCoat
-        concCoat
-        isRiser
+        Di % Pipe wall inner diameter
+        t % Pipe wall thickness
+        ovality % Pipe wall ovality
+        material % Pipe wall material
+        tCorr % Corrosion coating thickness
+        rhoCorr % Corrosion coating density
+        kCorr % Corrosion coating thermal conductivity
+        tConcMin % Minimum concrete thickness
+        tConc % Concrete thickness
+        rhoConc % Concrete density
+        kConc % Concrete thermal conductivity
     end
     
     methods
         function obj = PipeSegment(startConn, endConn, isOffshore, ...
-                innerD, ovality, material, corrCoat, concCoat, isRiser)
+                Di, ovality, material, tCorr, rhoCorr, kCorr, ...
+                tConcMin, rhoConc, kConc)
             obj.startConn = startConn;
             obj.endConn = endConn;
             obj.isOffshore = isOffshore;
-            obj.innerD = innerD;
-            obj.ovality = ovality;
-            obj.material = material;
-            obj.corrCoat = corrCoat;
-            obj.concCoat = concCoat;
-            obj.isRiser = isRiser;
+            obj.Di = Di;
             obj.t = -1;
+            obj.ovality = ovality;
+            obj.material = material;      
+            obj.tCorr = tCorr;
+            obj.rhoCorr = rhoCorr;
+            obj.kCorr = kCorr;
+            obj.tConcMin = tConcMin;
+            obj.tConc = -1;
+            obj.rhoConc = rhoConc;
+            obj.kConc = kConc;
         end
         
-        function obj = setT(obj, t)
+        function obj = setWallThickness(obj, t)
             if t <= 0
                 error("Wall thickness cannot be zero or negative.")
             end
@@ -44,7 +53,7 @@ classdef PipeSegment
         end
         
         function d = getInnerDiameter(obj)
-            d = obj.innerD;
+            d = obj.Di;
         end
         
         function [x, y] = getXY(obj, frac)
@@ -127,10 +136,25 @@ classdef PipeSegment
             gammas = 2*alphaMpt/(0.96*sqrt(3)); % Eq. from table 5-9
         end
         
-        function D = calcDiameter(obj)
-            tCorr = obj.corrCoat.getThickness();
-            tConc = obj.concCoat.getThickness();
-            D = obj.innerD + 2*obj.t + 2*tCorr + 2*tConc;
+        function t1 = calcT1(obj, operational)
+            % Returns characteristic wall thickness as defined in table 5-6
+            % arg operational: boolean
+            tFab = obj.material.tolerance * obj.t;
+            if operational
+                t1 = obj.t-tFab-obj.tCorr;
+            else
+                t1 = obj.t-tFab;
+            end
+        end
+        
+        function t2 = calcT2(obj, operational)
+            % Returns characteristic wall thickness as defined in table 5-6
+            % arg operational: boolean
+            if operational
+                t2 = obj.t - obj.tCorr;
+            else
+                t2 = obj.t;
+            end
         end
     end
 end

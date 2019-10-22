@@ -2,11 +2,11 @@
 nSamples = [20, 10, 10, 10, 10, 20];
 
 % Design bursting criterion
-designTs = calcBurstingCriterion(pipeSegments, 5, targets, Po, rhoSw, ...
+designTs = calcBurstingCriterion(pipeSegments, 5, targets, rhoSw, ...
     designDens, gravity, incPress, refHeight, nSamples);
 
 % Test bursting criterion
-testTs = calcBurstingCriterion(pipeSegments, 1, targets, Po, rhoSw, ...
+testTs = calcBurstingCriterion(pipeSegments, 1, targets, rhoSw, ...
     testDens, gravity, testPress, refHeight, nSamples);
 
 % Get maximum thicknesses for each segment for design and test
