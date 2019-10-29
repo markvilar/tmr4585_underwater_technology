@@ -2,7 +2,7 @@ classdef PipeSegment
     properties
         startConn
         endConn
-        isOffshore
+        locClass % Location class, 1 = low, 2 = medium, 3 = high
         Di % Pipe wall inner diameter
         t % Pipe wall thickness
         ovality % Pipe wall ovality
@@ -18,12 +18,12 @@ classdef PipeSegment
     end
     
     methods
-        function obj = PipeSegment(startConn, endConn, isOffshore, ...
+        function obj = PipeSegment(startConn, endConn, locClass, ...
                 Di, ovality, material, tCorr, rhoCorr, kCorr, ...
                 tConcMin, rhoConc, kConc)
             obj.startConn = startConn;
             obj.endConn = endConn;
-            obj.isOffshore = isOffshore;
+            obj.locClass = locClass;
             obj.Di = Di;
             obj.t = -1;
             obj.ovality = ovality;
@@ -35,13 +35,6 @@ classdef PipeSegment
             obj.tConc = -1;
             obj.rhoConc = rhoConc;
             obj.kConc = kConc;
-        end
-        
-        function obj = setWallThickness(obj, t)
-            if t <= 0
-                error("Wall thickness cannot be zero or negative.")
-            end
-            obj.t = t;
         end
         
         function mat = getMaterial(obj)
@@ -71,21 +64,10 @@ classdef PipeSegment
             y = ya + frac*delY;
         end
         
-        function minHDist = minHDistToTargets(obj, frac, targets)
-            [x, y] = obj.getXY(frac);
-            n = length(targets);
-            hDists = zeros(1,n);
-            for i = 1:length(targets)
-                target = targets(i,:);
-                xt = target(1);
-                hDists(i) = abs(xt-x);
-            end
-            minHDist = min(hDists);
-        end
-        
-        function safeClass = getSafetyClass(~, locClass, fluidClass)
-            %table 2-4 
-            if locClass == 1
+        function safeClass = getSafetyClass(obj, fluidClass)
+            % Definition from table 2-4.
+            % arg fluidClass: int, 1-5
+            if obj.locClass == 1
                 switch fluidClass
                     case {1,3}
                         safeClass = 1;
@@ -94,7 +76,7 @@ classdef PipeSegment
                     otherwise
                         safeClass = -1;
                 end
-            elseif locClass == 2
+            elseif obj.locClass == 2
                 switch fluidClass
                     case {1,3}
                         safeClass = 2;
@@ -108,17 +90,11 @@ classdef PipeSegment
             end
         end
         
-        function [gammaM, gammaSC] = getResistFactors(obj, hDist, fluidClass)
+        function [gammaM, gammaSC] = getResistFactors(obj, fluidClass)
             % Returns the pipeline resistance factors based on the
             % safety class according to DNV-OS-F101 table 5-9.
-            % arg hDist: float
             % arg fluidClass: int
-            if hDist < 500 || (~obj.isOffshore)
-                locClass = 2;
-            else
-                locClass = 1;
-            end
-            safeClass = obj.getSafetyClass(locClass, fluidClass);
+            safeClass = obj.getSafetyClass(fluidClass);
             switch safeClass
                 case 1
                     gammaSC = 1.046;
@@ -130,6 +106,13 @@ classdef PipeSegment
                     gammaSC = 1.308;
             end
             gammaM = obj.material.gammaM;
+        end
+        
+        function obj = setTFromT1(obj, t1)
+            if t1 <= 0
+                error("t1 cannot be zero or negative.")
+            end
+            obj.t = (1/(1-obj.material.tolerance))*(t1 + obj.tCorr);
         end
         
         function t1 = calcT1(obj, operational)
