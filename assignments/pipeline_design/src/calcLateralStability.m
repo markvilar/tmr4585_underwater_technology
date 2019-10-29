@@ -1,7 +1,7 @@
 function [latParams] =  calcLateralStability(submergedWeight, rho_w, gravity, soil)
 Us  % spectrally derived oscillatory velocity % FIND Us!!
 Tu % mean zero up-crossing period of oscillating flow at pipe level.
-D = Di %% FIND DIAMETER !!!
+D = Di; %% FIND DIAMETER !!!
 V = ??? %steady current velocity 
 T = ???
 drySoilWeight = soil.dryWeight;
