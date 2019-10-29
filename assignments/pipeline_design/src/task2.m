@@ -2,5 +2,5 @@
 alphaFab = 1.00;
 Pmin = Po;
 
-bucklingArrestors = calcArrestorCriterion(pipeSegments, flow, targets, ...
-    Po, rhoSw, gravity, Pmin, alphaFab, minTs, nSamples);
+bucklingArrestors = calcArrestorCriterion(pipeSegments, 5, targets, ...
+    Po, rhoSw, gravity, Pmin, alphaFab, nSamples);
