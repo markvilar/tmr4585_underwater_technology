@@ -1,29 +1,39 @@
+%% Misc.
+clear all
+clc
+
 %% Initialization of objects
-[pipeSegments, flow, targets] = initDesign();
-[soil, osSpectras, isSpectras, current] = initEnvironment();
+[pipeSegments, flow] = initDesign();
+[soil, osSpectras, isSpectras] = initEnvironment();
 
 %% General constants
-rho = 1025; % kg/m^3
+rhoSw = 1025; % kg/m^3
+rhoW = 1000; % kg/m^3
 Po = 0.101*10^6; % Pa (Atmospheric pressure)
 gravity = 9.81; % m/s^2
 
 %% Design condition
 designPress = 25*10^6; % Pa
-designRef = 20; % m
 designDens = 300; % kg/m^3
+
+%% Incidental condition
+incPress = 1.33*designPress;
 
 %% Test condition
 testPress = 4/3*designPress; % Pa
-testRef = 20; % m
 testDens = 1000; % kg/m^3
+refHeight = 20; % m
 
-%% Burst criterion
-% Design criterion
-calcBurstingCriterion(pipeSegments, flow, targets, Po, rho, designDens, ...
-    gravity, designPress, designRef, 10)
-
-% Test criterion
+%% Installation condition 
+installPress = 0; %Pa
+installRef = 20; % m
+installDens = 1.2; % kg/m^3
 
 %% Lateral stability
 [latParams] = calcLateralStability(submergedWeight, rho, gravity, soil, pipeSegments, thickness);
 % need: submergedWeight pipe and thickness pipe (t). 
+
+%% Tasks
+run('task1.m')
+% run('task2.m')
+% run('task3.m')

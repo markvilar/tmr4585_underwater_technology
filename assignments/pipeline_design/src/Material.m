@@ -3,20 +3,22 @@ classdef Material
         allowance
         tolerance
         density
-        yield
-        tensile
+        SMYS
+        SMYT
         thermCon
+        gammaM
     end
     
     methods
-	    function obj = Material(allowance, tolerance, density, yield, tensile, ...
-                thermCon)
+	    function obj = Material(allowance, tolerance, density, SMYS, SMYT, ...
+                thermCon, gammaM)
             obj.allowance = allowance;
 		    obj.tolerance = tolerance;
 		    obj.density = density;
-		    obj.yield = yield;
-		    obj.tensile = tensile;
+		    obj.SMYS = SMYS;
+		    obj.SMYT = SMYT;
             obj.thermCon = thermCon;
+            obj.gammaM = gammaM;
 	    end
     end
 end
