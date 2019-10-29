@@ -1,4 +1,4 @@
-function [soil, offshoreSpectras, inshoreSpectras, current] = ...
+function [soil, offshoreSpectras, inshoreSpectras] = ...
     initEnvironment()
 %% Soil
 friction = 0.2;
@@ -40,9 +40,5 @@ inshoreSpectras('spring') = spring;
 inshoreSpectras('summer') = summer;
 inshoreSpectras('autumn') = autumn;
 inshoreSpectras('winter') = winter;
-
-%% Current profile
-% Current(returnPeriods, velocities)
-current = Current([1, 10, 100], [0.5, 0.55, 0.6]);
 
 end
