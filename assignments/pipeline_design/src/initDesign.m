@@ -1,4 +1,4 @@
-function [pipeSegments, flow, targets] = initDesign()
+function [pipeSegments, flow] = initDesign()
 %% Corrosion coating
 tCorr = 2*10^(-3); % m
 rhoCorr = 1100; % kg/m^3
@@ -35,18 +35,18 @@ kp150 = Connection(150000, 20);
 Di = 406.4*10^(-3); % m
 ovality = 0.005; % -
 
-seg1 = PipeSegment(kp000, kp001, true, Di, ovality, material, ...
-    tCorr, rhoCorr, kCorr, tConcMin, rhoConc, kConc);
-seg2 = PipeSegment(kp001, kp090, true, Di, ovality, material, ...
-    tCorr, rhoCorr, kCorr, tConcMin, rhoConc, kConc);
-seg3 = PipeSegment(kp090, kp100, true, Di, ovality, material, ...
-    tCorr, rhoCorr, kCorr, tConcMin, rhoConc, kConc);
-seg4 = PipeSegment(kp100, kp105, false, Di, ovality, material, ...
-    tCorr, rhoCorr, kCorr, tConcMin, rhoConc, kConc);
-seg5 = PipeSegment(kp105, kp115, false, Di, ovality, material, ...
-    tCorr, rhoCorr, kCorr, tConcMin, rhoConc, kConc);
-seg6 = PipeSegment(kp115, kp150, false, Di, ovality, material, ...
-    tCorr, rhoCorr, kCorr, tConcMin, rhoConc, kConc);
+seg1 = PipeSegment(kp000, kp001, 3, Di, ovality, material, tCorr, ...
+    rhoCorr, kCorr, tConcMin, rhoConc, kConc);
+seg2 = PipeSegment(kp001, kp090, 2, Di, ovality, material, tCorr, ...
+    rhoCorr, kCorr, tConcMin, rhoConc, kConc);
+seg3 = PipeSegment(kp090, kp100, 2, Di, ovality, material, tCorr, ...
+    rhoCorr, kCorr, tConcMin, rhoConc, kConc);
+seg4 = PipeSegment(kp100, kp105, 3, Di, ovality, material, tCorr, ...
+    rhoCorr, kCorr, tConcMin, rhoConc, kConc);
+seg5 = PipeSegment(kp105, kp115, 3, Di, ovality, material, tCorr, ...
+    rhoCorr, kCorr, tConcMin, rhoConc, kConc);
+seg6 = PipeSegment(kp115, kp150, 3, Di, ovality, material, tCorr, ...
+    rhoCorr, kCorr, tConcMin, rhoConc, kConc);
 
 pipeSegments = [seg1, seg2, seg3, seg4, seg5, seg6];
 
@@ -59,8 +59,4 @@ density = 250; % kg/m^3
 
 flow = Flow(fluidClass, inletTemperature, velocity, heatCapacity, density);
 
-%% Platform and factory location
-target1 = [0, 20];
-target2 = [150000, 20];
-targets = [target1; target2];
 end

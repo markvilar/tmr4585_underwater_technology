@@ -3,7 +3,7 @@ clear all
 clc
 
 %% Initialization of objects
-[pipeSegments, flow, targets] = initDesign();
+[pipeSegments, flow] = initDesign();
 [soil, osSpectras, isSpectras, current] = initEnvironment();
 
 %% General constants
@@ -31,5 +31,5 @@ installDens = 1.2; % kg/m^3
 
 %% Tasks
 run('task1.m')
-run('task2.m')
+% run('task2.m')
 % run('task3.m')
