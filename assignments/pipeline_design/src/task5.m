@@ -7,11 +7,18 @@ t_2_prior_operation = maxMoment + t_corr;
 t_2_operation = maxMoment;
 
 % Design/operation max moment, internal pressure
-operation = 1;
-test = 0;
+operation = 1; %Operation phase
+test = 0;      %Is it system test
 fluidClass = 5;
 MaxDesignMomentSegments = calcMaxMoment(pipeSegments, fluidClass, test, Po, rhoSw, ...
     designDens, gravity, designPress, refHeight, nSamples, operation);
+
+% Design/operation max moment, NO internal pressure
+operation = 1; %Operation phase
+test = 0;      %Is it system test
+fluidClass = 1;
+MaxDesignMomentSegmentsNoInternP = calcMaxMoment(pipeSegments, fluidClass, test, Po, rhoSw, ...
+    installDens, gravity, installPress, refHeight, nSamples, operation);
 
 % Test max moment, internal pressure
 operation = 0;
@@ -30,6 +37,7 @@ MaxInstallationMomentSegments = calcMaxMoment(pipeSegments, fluidClass, test, Po
 % Get maximum moment for each segment for design, test and installation
 nSegs = length(pipeSegments);
 designSegmentMaxMoment = zeros(nSegs, 1);
+designNoInternPSegmentMaxMoment = zeros(nSegs, 1);
 testSegmentMaxMoment = zeros(nSegs, 1);
 installationSegmentMaxMoment = zeros(nSegs, 1);
 
@@ -37,27 +45,30 @@ installationSegmentMaxMoment = zeros(nSegs, 1);
 %For each segment, get the max moment from the samples
 for n = 1:nSegs
     designSegmentSamplesM = MaxDesignMomentSegments{n};
+    designNoInternPSegmentSamplesM = MaxDesignMomentSegmentsNoInternP{n};
     testSegmentSamplesM = MaxTestMomentSegments{n};
     installSegmentSamplesM = MaxInstallationMomentSegments{n};
     designSegmentMaxMoment(n) = max(designSegmentSamplesM);
+    designNoInternPSegmentMaxMoment(n) = max(designNoInternPSegmentSamplesM);
     testSegmentMaxMoment(n) = max(testSegmentSamplesM);
     installationSegmentMaxMoment(n) = max(installSegmentSamplesM);
-    %maxSegmentOverallMoment(n) = max(designSegmentMaxMoment(n), testSegmentMaxMoment(n), installationSegmentMaxMoment(n));
 end
 
 %Finding the maximum moment out of all segments
 [designMaxMoment, designMaxMomentIndice] = max(designSegmentMaxMoment);
+[designNoInternPMaxMoment, designNoInternPMaxMomentIndice] = max(designNoInternPSegmentMaxMoment);
 [testMaxMoment, testMaxMomentIndice] = max(testSegmentMaxMoment);
 [installationMaxMoment, installationMaxMomentIndice] = max(installationSegmentMaxMoment);
-%maxOverallMoment = max(maxSegmentOverallMoment);
 
 %Finding submerged weight at the segment of where the maximum moment is
-wsDesignSegment = w_subm(designMaxMomentIndice)*1000;
-wsTestSegment = w_subm(testMaxMomentIndice)*1000;
-wsInstallationMaxMoment = w_subm(installationMaxMomentIndice)*1000; 
+wsDesignSegment = w_fgas(designMaxMomentIndice)*1000;   %Gas filled pipe
+wsDesignNoInternPSegment = w_subm(designNoInternPMaxMomentIndice)*1000; %empty pipe
+wsTestSegment = w_filled(testMaxMomentIndice)*1000;     %Water filled pipe
+wsInstallationMaxMoment = w_subm(installationMaxMomentIndice)*1000; %Empty pipe
 
 %Calculating the maximum allowable spanning length
 designMaxSpanlength = calcMaxSpanLength(wsDesignSegment,designMaxMoment);
+desginNoInternPSpanlength = calcMaxSpanLength(wsDesignNoInternPSegment,designNoInternPMaxMoment);
 testMaxSpanLength = calcMaxSpanLength(wsTestSegment,testMaxMoment);
 installationMaxSpanLength = calcMaxSpanLength(wsInstallationMaxMoment, installationMaxMoment);
 
