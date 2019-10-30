@@ -16,7 +16,7 @@ t_corr = 0.002; % m
 
 for i= 1:length(pipeSegments)
     %t_s = t_steel(i);
-    t_s = pipeSegments(i).t
+    t_s = pipeSegments(i).t;
     
     D(i) = Di + 2*t_s + 2*t_conc + 2*t_corr;
     
@@ -49,4 +49,4 @@ SG_pipe = SG_pipe/1000; % kN/m3
 VarNames = {'Segment', 'Density', 'SG', 'SubW_empty', 'SubW_water', ...
     'SubW_gas'};
 TableVerticalStability = table(segment(:),rho_conc(:),SG_pipe(:), w_subm(:), w_filled(:), ...
-    w_fgas(:), 'VariableNames',VarNames);
+    w_fgas(:), 'VariableNames',VarNames)
