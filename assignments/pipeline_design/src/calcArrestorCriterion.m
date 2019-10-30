@@ -1,4 +1,4 @@
-function results = calcArrestorCriterion(segments, flow, targets, Po, ...
+function results = calcArrestorCriterion(segments, fluidClass, targets, Po, ...
     rhoE, g, Pmin, alphaFab, ts, nSamples)
 % Calculates the need for buckling arrestors along pipeline segments
 % according to DNV-OS-F101 section 5D.
@@ -13,8 +13,6 @@ function results = calcArrestorCriterion(segments, flow, targets, Po, ...
 assert(length(segments) == length(nSamples) && ...
     length(segments) == length(ts), "Number of segments, thicknesses " ...
     + "and the amount of sample points must be the same.");
-
-fluidClass = flow.getFluidClass();
 nSegs = length(segments);
 results = cell(nSegs, 1);
 
@@ -23,17 +21,18 @@ for i = 1:nSegs
     nSample = nSamples(i);
     [fy, fu] = segment.getMaterialStrength();
     Di = segment.getInnerDiameter();
-    t = ts(i);
+    % Get relevant thickness
+    t2 = segment.calcT2(false);
     result = true(nSample, 1);
     for j = 1:nSample
         frac = (j-1)*(1/(nSample-1));
-        [x, y] = segment.getXY(frac);
+        [~, y] = segment.getXY(frac);
         hDdist = segment.minHDistToTargets(frac, targets);
-        [alphaMpt, alphaSpt, gammas] = segment.getResistFactors(hDdist, ...
+        [gammaM, gammaSC] = segment.getResistFactors(hDdist, ...
             fluidClass);
         Pe = Po - rhoE*g*min(y, 0);
-        Ppr = 35*fy*alphaFab*(t/Di)^(2.5); % Eq. 5.16
-        result(j) = ~((Pe - Pmin) <= Ppr/gammas); % Eq. 5.15
+        Ppr = 35*fy*alphaFab*(t2/Di)^(2.5); % Eq. 5.16
+        result(j) = ~((Pe - Pmin) <= Ppr/(gammaM*gammaSC)); % Eq. 5.15
     end
     results{i} = result;
 end

@@ -2,36 +2,39 @@ classdef PipeSegment
     properties
         startConn
         endConn
-        isOffshore
-        innerD
-        t
-        ovality
-        material
-        corrCoat
-        concCoat
-        isRiser
+        locClass % Location class, 1 = low, 2 = medium, 3 = high
+        Di % Pipe wall inner diameter
+        t % Pipe wall thickness
+        ovality % Pipe wall ovality
+        material % Pipe wall material
+        tCorr % Corrosion coating thickness
+        rhoCorr % Corrosion coating density
+        kCorr % Corrosion coating thermal conductivity
+        tConcMin % Minimum concrete thickness
+        tConc % Concrete thickness
+        rhoConc % Concrete density
+        kConc % Concrete thermal conductivity
+        gammaSC % Safety class resistance factor
     end
     
     methods
-        function obj = PipeSegment(startConn, endConn, isOffshore, ...
-                innerD, ovality, material, corrCoat, concCoat, isRiser)
+        function obj = PipeSegment(startConn, endConn, locClass, ...
+                Di, ovality, material, tCorr, rhoCorr, kCorr, ...
+                tConcMin, rhoConc, kConc)
             obj.startConn = startConn;
             obj.endConn = endConn;
-            obj.isOffshore = isOffshore;
-            obj.innerD = innerD;
-            obj.ovality = ovality;
-            obj.material = material;
-            obj.corrCoat = corrCoat;
-            obj.concCoat = concCoat;
-            obj.isRiser = isRiser;
+            obj.locClass = locClass;
+            obj.Di = Di;
             obj.t = -1;
-        end
-        
-        function obj = setT(obj, t)
-            if t <= 0
-                error("Wall thickness cannot be zero or negative.")
-            end
-            obj.t = t;
+            obj.ovality = ovality;
+            obj.material = material;      
+            obj.tCorr = tCorr;
+            obj.rhoCorr = rhoCorr;
+            obj.kCorr = kCorr;
+            obj.tConcMin = tConcMin;
+            obj.tConc = -1;
+            obj.rhoConc = rhoConc;
+            obj.kConc = kConc;
         end
         
         function mat = getMaterial(obj)
@@ -44,7 +47,7 @@ classdef PipeSegment
         end
         
         function d = getInnerDiameter(obj)
-            d = obj.innerD;
+            d = obj.Di;
         end
         
         function [x, y] = getXY(obj, frac)
@@ -61,20 +64,10 @@ classdef PipeSegment
             y = ya + frac*delY;
         end
         
-        function minHDist = minHDistToTargets(obj, frac, targets)
-            [x, y] = obj.getXY(frac);
-            n = length(targets);
-            hDists = zeros(1,n);
-            for i = 1:length(targets)
-                target = targets(i,:);
-                xt = target(1);
-                hDists(i) = abs(xt-x);
-            end
-            minHDist = min(hDists);
-        end
-        
-        function safeClass = getSafetyClass(~, locClass, fluidClass)
-            if locClass == 1
+        function safeClass = getSafetyClass(obj, fluidClass)
+            % Definition from table 2-4.
+            % arg fluidClass: int, 1-5
+            if obj.locClass == 1
                 switch fluidClass
                     case {1,3}
                         safeClass = 1;
@@ -83,7 +76,7 @@ classdef PipeSegment
                     otherwise
                         safeClass = -1;
                 end
-            elseif locClass == 2
+            elseif obj.locClass == 2
                 switch fluidClass
                     case {1,3}
                         safeClass = 2;
@@ -97,40 +90,50 @@ classdef PipeSegment
             end
         end
         
-        function [alphaMpt, alphaSpt, gammas] = getResistFactors(obj, hDist, fluidClass)
+        function [gammaM, gammaSC] = getResistFactors(obj, fluidClass)
             % Returns the pipeline resistance factors based on the
             % safety class according to DNV-OS-F101 table 5-9.
-            % arg hDist: float
             % arg fluidClass: int
-            if hDist < 500 || (~obj.isOffshore)
-                locClass = 2;
-            else
-                locClass = 1;
-            end
-            safeClass = obj.getSafetyClass(locClass, fluidClass);
+            safeClass = obj.getSafetyClass(fluidClass);
             switch safeClass
                 case 1
-                    alphaMpt = 1.000;
-                    alphaSpt = 1.03;
+                    gammaSC = 1.046;
                 case 2
-                    alphaMpt = 1.088;
-                    alphaSpt = 1.05;
+                    gammaSC = 1.138;
                 case 3
-                    alphaMpt = 1.251;
-                    alphaSpt = 1.05;
+                    gammaSC = 1.308;
                 otherwise
-                    disp("Undefined pipe segment safety class, " ...
-                        + "using the most conservative parameters.")
-                    alphaMpt = 1.251;
-                    alphaSpt = 1.05;
+                    gammaSC = 1.308;
             end
-            gammas = 2*alphaMpt/(0.96*sqrt(3)); % Eq. from table 5-9
+            gammaM = obj.material.gammaM;
         end
         
-        function D = calcDiameter(obj)
-            tCorr = obj.corrCoat.getThickness();
-            tConc = obj.concCoat.getThickness();
-            D = obj.innerD + 2*obj.t + 2*tCorr + 2*tConc;
+        function obj = setTFromT1(obj, t1)
+            if t1 <= 0
+                error("t1 cannot be zero or negative.")
+            end
+            obj.t = (1/(1-obj.material.tolerance))*(t1 + obj.tCorr);
+        end
+        
+        function t1 = calcT1(obj, operational)
+            % Returns characteristic wall thickness as defined in table 5-6
+            % arg operational: boolean
+            tFab = obj.material.tolerance * obj.t;
+            if operational
+                t1 = obj.t-tFab-obj.tCorr;
+            else
+                t1 = obj.t-tFab;
+            end
+        end
+        
+        function t2 = calcT2(obj, operational)
+            % Returns characteristic wall thickness as defined in table 5-6
+            % arg operational: boolean
+            if operational
+                t2 = obj.t - obj.tCorr;
+            else
+                t2 = obj.t;
+            end
         end
     end
 end
