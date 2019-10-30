@@ -1,5 +1,5 @@
-function maxMomentSegments = calcMaxMoment(segments, fluidClass, Po, ...
-    rhoE, rhoI, g, Pref, yref, nSamples, operation, test)
+function maxMomentSegments = calcMaxMoment(segments, fluidClass,test, Po, ...
+    rhoE, rhoI, g, Pref, yref, nSamples, operation)
 % Calculates the most conservative maximum allowable free span length
 % DNV-OS-F101 section 5D.
 % arg segments: Nx1 array of PipeSegment objects
@@ -50,11 +50,11 @@ end
 
 
 function plasticCapaMoment = MpCalc(fy,D,t)
-    plasticCapaMoment = fy*pi*(D-t)*t;
+    plasticCapaMoment = fy*((D-t)^2)*t;
 end
 
 function flowStressPar = alpha_cCalc(beta,fu,fy)
-    flowStressPar = (1-beta) + beta*(fu/fy);
+    flowStressPar = (1-beta) + (beta*(fu/fy));
 end
 
 function a_p = alpha_pCalc(beta,Pi,Pe,Pb)
