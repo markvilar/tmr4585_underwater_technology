@@ -31,14 +31,14 @@ installDens = 1.2; % kg/m^3
 
 %% Lateral stability
 %installation: empty pipe - summer
-latParams_inst = calcLateralStability(submergedWeight, rho, gravity, soil, pipeSegments, thickness, osSpectras('summer'), isSpectras('summer'));
-%system test: water filled - winter
-latParams_test = calcLateralStability(submergedWeight, rho, gravity, soil, pipeSegments, thickness, osSpectras('winter'), isSpectras('winter'));
-%operation: gas filled - spring?
-latParams_inst = calcLateralStability(submergedWeight, rho, gravity, soil, pipeSegments, thickness, osSpectras('spring'), isSpectras('spring'));
-% NEED: submergedWeight pipe and thickness pipe (t). 
+% latParams_inst = calcLateralStability(submergedWeight, rho, gravity, soil, pipeSegments, thickness, osSpectras('summer'), isSpectras('summer'));
+% %system test: water filled - winter
+% latParams_test = calcLateralStability(submergedWeight, rho, gravity, soil, pipeSegments, thickness, osSpectras('winter'), isSpectras('winter'));
+% %operation: gas filled - spring?
+% latParams_inst = calcLateralStability(submergedWeight, rho, gravity, soil, pipeSegments, thickness, osSpectras('spring'), isSpectras('spring'));
+% % NEED: submergedWeight pipe and thickness pipe (t). 
 
 %% Tasks
-run('task1.m')
-run('task2.m')
+%'task1.m';
+%'task2.m';
 % run('task3.m')
