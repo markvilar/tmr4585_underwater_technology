@@ -23,5 +23,5 @@ for n = 1:nSegs
     designMaxTs(n) = segment.calcTFromT1(designMaxT1s(n), true);
     testMaxTs(n) = segment.calcTFromT1(testMaxT1s(n), true);
     maxT1s(n) = max(designMaxT1s(n), testMaxT1s(n)); % Max req. t1
-    segment = segment.setTFromT1(maxT1s(n), true); % Set t
+    pipeSegments(n) = segment.setTFromT1(maxT1s(n), true); % Set t
 end
