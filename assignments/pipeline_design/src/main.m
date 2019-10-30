@@ -30,8 +30,13 @@ installRef = 20; % m
 installDens = 1.2; % kg/m^3
 
 %% Lateral stability
-[latParams] = calcLateralStability(submergedWeight, rho, gravity, soil, pipeSegments, thickness);
-% need: submergedWeight pipe and thickness pipe (t). 
+%installation: empty pipe - summer
+latParams_inst = calcLateralStability(submergedWeight, rho, gravity, soil, pipeSegments, thickness, osSpectras('summer'), isSpectras('summer'));
+%system test: water filled - winter
+latParams_test = calcLateralStability(submergedWeight, rho, gravity, soil, pipeSegments, thickness, osSpectras('winter'), isSpectras('winter'));
+%operation: gas filled - spring?
+latParams_inst = calcLateralStability(submergedWeight, rho, gravity, soil, pipeSegments, thickness, osSpectras('spring'), isSpectras('spring'));
+% NEED: submergedWeight pipe and thickness pipe (t). 
 
 %% Tasks
 run('task1.m')
