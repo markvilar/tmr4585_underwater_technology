@@ -7,16 +7,25 @@ t_2_prior_operation = maxMoment + t_corr;
 t_2_operation = maxMoment;
 
 % Design/operation max moment, internal pressure
-MaxDesignMomentSegments = calcMaxMoment(pipeSegments, flow, targets, Po, rhoSw, ...
-    designDens, gravity, designPress, designRef, nSamples,t_2_operation);
+operation = 1;
+test = 0;
+fluidClass = 5;
+MaxDesignMomentSegments = calcMaxMoment(pipeSegments, fluidClass, test, Po, rhoSw, ...
+    designDens, gravity, designPress, designRef, nSamples, operation);
 
 % Test max moment, internal pressure
-MaxTestMomentSegments = calcMaxMoment(pipeSegments, flow, targets, Po, rhoSw, ...
-    testDens, gravity, testPress, testRef, nSamples,t_2_prior_operation);
+operation = 0;
+test = 1;
+fluidClass = 1;
+MaxTestMomentSegments = calcMaxMoment(pipeSegments, fluidClass, test, Po, rhoSw, ...
+    testDens, gravity, testPress, testRef, nSamples, operation);
 
 %Installation max moment
-MaxInstallationMomentSegments = calcMaxMoment(pipeSegments, flow, targets, Po, rhoSw, ...
-    installDens, gravity, installPress, installRef, nSamples,t_2_prior_operation);
+operation = 0;
+test = 0;
+fluidClass = 1;
+MaxInstallationMomentSegments = calcMaxMoment(pipeSegments, fluidClass, test, Po, rhoSw, ...
+    installDens, gravity, installPress, installRef, nSamples, operation);
 
 % Get maximum moment for each segment for design, test and installation
 nSegs = length(pipeSegments);

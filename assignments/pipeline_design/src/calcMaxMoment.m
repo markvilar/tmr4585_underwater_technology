@@ -1,5 +1,5 @@
-function maxMomentSegments = calcMaxMoment(segments, flow, targets, Po, ...
-    rhoE, rhoI, g, Pref, yref, nSamples, t_2)
+function maxMomentSegments = calcMaxMoment(segments, fluidClass, Po, ...
+    rhoE, rhoI, g, Pref, yref, nSamples, operation, test)
 % Calculates the most conservative maximum allowable free span length
 % DNV-OS-F101 section 5D.
 % arg segments: Nx1 array of PipeSegment objects
@@ -15,7 +15,6 @@ function maxMomentSegments = calcMaxMoment(segments, flow, targets, Po, ...
 % return: cell array of vectors, the minimum thicknesses along each segment
 assert(length(segments) == length(nSamples), "Number of segments and amount " ...
     + "sample points must be the same.");
-fluidClass = flow.getFluidClass();
 N = length(segments);
 maxMomentSegments = cell(N,1);
 
@@ -24,34 +23,26 @@ for i = 1:N
     nSample = nSamples(i);
     maxMomentSample = zeros(nSample,1);
     segment = segments(i);
-    [SMYS, SMYT] = segment.getMaterialStrength();
-    alpha_U = 0.96; %Material strength factor. Table 5.4 
-    fy_temp = 0;
-    fu_temp = 0;
-    fy = (SMYS - fy_temp)*alpha_U;
-    fu = (SMYT - fu_temp)*alpha_U;
+    [fy, fu] = segment.getMaterialStrength(test);
     fcb = min([fy, fu/1.15]); % Equation 5.9
     Di = segment.getInnerDiameter();
-    D = Di + t_2; %Assumes that the nominal diameter is the inner plus 
-                    %wall thickness
+    D = Di + segment.t;                 
+    t_2 = segment.calcT2(operation);
     
     beta = betaCalc(D,t_2);              
     alpha_c = alpha_cCalc(beta,fu,fy);
     Mp = MpCalc(fy,D,t_2);
     Pb = p_bCalc(t_2,D,fcb);
     
-    %For each sample i segments
+    %For each sample in segments
     for j = 1:nSample
         frac = (j-1)*(1/(nSample-1));
-        [x, y] = segment.getXY(frac);
-        hDdist = segment.minHDistToTargets(frac, targets);
-        [alphaMpt, alphaSpt, gammas] = segment.getResistFactors(hDdist, ...
-            fluidClass);
+        [~, y] = segment.getXY(frac);
+        [gammaM, gammaSC] = segment.getResistFactors(fluidClass);
         Pe = Po - rhoE*g*min(y, 0);    % External pressure
         Pi = Pref - rhoI*g*(y - yref); % Internal pressure
         alpha_p = alpha_pCalc(beta,Pi,Pe,Pb);
-        maxMomentSample(j) = ((alpha_c*Mp)/(gammas))*sqrt(1-(alpha_p*((Pi-Pe)/(alpha_c*Pb)))^2); %Eq 5.19, solved for design moment
-        
+        maxMomentSample(j) = ((alpha_c*Mp)/(gammaM*gammaSC))*sqrt(1-(alpha_p*((Pi-Pe)/(alpha_c*Pb)))^2); %Eq 5.19, solved for design moment
     end
     maxMomentSegments{i} = maxMomentSample;
 end
