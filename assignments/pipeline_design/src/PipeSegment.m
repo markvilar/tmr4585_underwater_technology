@@ -37,8 +37,11 @@ classdef PipeSegment
             obj.kConc = kConc;
         end
         
-        function mat = getMaterial(obj)
-            mat = obj.material;
+        function [rho, SMYS, SMTS, E] = getMaterialProperties(obj)
+            rho = obj.material.density;
+            SMYS = obj.material.SMYS;
+            SMTS = obj.material.SMTS;
+            E = obj.material.E;
         end
         
         function [fy, fu] = getMaterialStrength(obj, test)
@@ -50,7 +53,7 @@ classdef PipeSegment
                 alphaU = 0.96;
             end
             fy = obj.material.SMYS*alphaU; % Equation 5.4
-            fu = obj.material.SMYT*alphaU; % Equation 5.5
+            fu = obj.material.SMTS*alphaU; % Equation 5.5
         end
         
         function d = getInnerDiameter(obj)
@@ -165,6 +168,11 @@ classdef PipeSegment
             else
                 t2 = obj.t;
             end
+        end
+        
+        function Isteel = calcISteel(obj)
+            D = obj.getSteelDiameter();
+            Isteel = pi*D^4/64 - pi*obj.Di^4/64;
         end
     end
 end

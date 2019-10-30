@@ -4,7 +4,7 @@ clc
 
 %% Initialization of objects
 [pipeSegments, flow] = initDesign();
-[soil, osSpectras, isSpectras] = initEnvironment();
+[soil, ~, ~] = initEnvironment();
 
 %% General constants
 rhoSw = 1025; % kg/m^3

@@ -10,16 +10,16 @@ rhoConc = 3000; % kg/m^3 2200-3000
 kConc = 0.5; % W/m/K
 
 %% Material
-allowance = 5*10^(-3); % m
 tolerance = 0.10; % -
 density = 7850; % kg/m^3
 SMYS = 450*10^6; % Pa
-SMYT = 1.15*SMYS; % Pa
+SMTS = 1.15*SMYS; % Pa
 thermCon = 43; % W/m/K
 gammaM = 1.15;
+E = 200*10^9; % Pa
 
-material = Material(allowance, tolerance, density, SMYS, SMYT, ...
-    thermCon, gammaM);
+material = Material(tolerance, density, SMYS, SMTS, ...
+    thermCon, gammaM, E);
 
 %% Connections
 % Connection(x, y)
