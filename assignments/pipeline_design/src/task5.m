@@ -67,10 +67,10 @@ wsTestSegment = w_filled(testMaxMomentIndice)*1000;     %Water filled pipe
 wsInstallationMaxMoment = w_subm(installationMaxMomentIndice)*1000; %Empty pipe
 
 %Calculating the maximum allowable spanning length
-designMaxSpanlength = calcMaxSpanLength(wsDesignSegment,designMaxMoment);
-desginNoInternPSpanlength = calcMaxSpanLength(wsDesignNoInternPSegment,designNoInternPMaxMoment);
-testMaxSpanLength = calcMaxSpanLength(wsTestSegment,testMaxMoment);
-installationMaxSpanLength = calcMaxSpanLength(wsInstallationMaxMoment, installationMaxMoment);
+designMaxSpanlength = calcMaxSpanLength(wsDesignSegment,designMaxMoment)
+desginNoInternPSpanlength = calcMaxSpanLength(wsDesignNoInternPSegment,designNoInternPMaxMoment)
+testMaxSpanLength = calcMaxSpanLength(wsTestSegment,testMaxMoment)
+installationMaxSpanLength = calcMaxSpanLength(wsInstallationMaxMoment, installationMaxMoment)
 
 
 
