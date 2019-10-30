@@ -29,6 +29,10 @@ installPress = 0; %Pa
 installRef = 20; % m
 installDens = 1.2; % kg/m^3
 
+%% Lateral stability
+[latParams] = calcLateralStability(submergedWeight, rho, gravity, soil, pipeSegments, thickness);
+% need: submergedWeight pipe and thickness pipe (t). 
+
 %% Tasks
 run('task1.m')
 run('task2.m')
