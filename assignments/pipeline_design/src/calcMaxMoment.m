@@ -1,4 +1,4 @@
-function maxDesignMoments = calcMaxDesignMoment(segments, flow, targets, Po, ...
+function maxMomentSegments = calcMaxMoment(segments, flow, targets, Po, ...
     rhoE, rhoI, g, Pref, yref, nSamples, t_2)
 % Calculates the most conservative maximum allowable free span length
 % DNV-OS-F101 section 5D.
@@ -17,10 +17,12 @@ assert(length(segments) == length(nSamples), "Number of segments and amount " ..
     + "sample points must be the same.");
 fluidClass = flow.getFluidClass();
 N = length(segments);
-maxDesignMoments = cell(N,1);
+maxMomentSegments = cell(N,1);
+
+%For each segment
 for i = 1:N
     nSample = nSamples(i);
-    maxDesignMoment = zeros(nSample,1);
+    maxMomentSample = zeros(nSample,1);
     segment = segments(i);
     [SMYS, SMYT] = segment.getMaterialStrength();
     alpha_U = 0.96; %Material strength factor. Table 5.4 
@@ -38,7 +40,7 @@ for i = 1:N
     Mp = MpCalc(fy,D,t_2);
     Pb = p_bCalc(t_2,D,fcb);
     
-    %Calculating 
+    %For each sample i segments
     for j = 1:nSample
         frac = (j-1)*(1/(nSample-1));
         [x, y] = segment.getXY(frac);
@@ -48,10 +50,10 @@ for i = 1:N
         Pe = Po - rhoE*g*min(y, 0);    % External pressure
         Pi = Pref - rhoI*g*(y - yref); % Internal pressure
         alpha_p = alpha_pCalc(beta,Pi,Pe,Pb);
-        maxDesignMoment(j) = ((alpha_c*Mp)/(gammas))*sqrt(1-(alpha_p*((Pi-Pe)/(alpha_c*Pb)))^2); %Eq 5.19, solved for design moment
+        maxMomentSample(j) = ((alpha_c*Mp)/(gammas))*sqrt(1-(alpha_p*((Pi-Pe)/(alpha_c*Pb)))^2); %Eq 5.19, solved for design moment
         
     end
-    maxDesignMoments{i} = maxDesignMoment;
+    maxMomentSegments{i} = maxMomentSample;
 end
 end
 
