@@ -16,7 +16,7 @@ t_corr = 0.002; % m
 
 for i= 1:length(pipeSegments)
     %t_s = t_steel(i);
-    t_s = pipeSegments(i).t;
+    t_s = pipeSegments(i).calcT2(true);
     
     D(i) = Di + 2*t_s + 2*t_conc + 2*t_corr;
     
