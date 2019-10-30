@@ -40,5 +40,5 @@ latParams_inst = calcLateralStability(submergedWeight, rho, gravity, soil, pipeS
 
 %% Tasks
 run('task1.m')
-% run('task2.m')
+run('task2.m')
 % run('task3.m')
