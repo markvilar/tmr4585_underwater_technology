@@ -41,9 +41,16 @@ classdef PipeSegment
             mat = obj.material;
         end
         
-        function [fy, fu] = getMaterialStrength(obj)
-            fy = obj.material.SMYS;
-            fu = obj.material.SMYT;
+        function [fy, fu] = getMaterialStrength(obj, test)
+            % Returns the characteristic material strengths as defined
+            % in DNV-OS-F101 section 5.
+            if test
+                alphaU = 1.00;
+            else
+                alphaU = 0.96;
+            end
+            fy = obj.material.SMYS*alphaU; % Equation 5.4
+            fu = obj.material.SMYT*alphaU; % Equation 5.5
         end
         
         function d = getInnerDiameter(obj)
@@ -108,28 +115,44 @@ classdef PipeSegment
             gammaM = obj.material.gammaM;
         end
         
-        function obj = setTFromT1(obj, t1)
+        function obj = setTFromT1(obj, t1, operation)
+            % Calculates and assigns the pipe segments wall thickness 
+            % based on t1 as defined in table 5-6.
+            % arg t1: float
+            % arg operation: boolean
             if t1 <= 0
                 error("t1 cannot be zero or negative.")
             end
-            obj.t = (1/(1-obj.material.tolerance))*(t1 + obj.tCorr);
+            obj.t = obj.calcTFromT1(t1, operation);
         end
         
-        function t1 = calcT1(obj, operational)
-            % Returns characteristic wall thickness as defined in table 5-6
-            % arg operational: boolean
+        function t = calcTFromT1(obj, t1, operation)
+            % Calculates the wall thickness based on t1 as defined in
+            % table 5-6.
+            % arg t1: float
+            % arg operation: boolean
+            if operation
+                t = (1/(1-obj.material.tolerance))*(t1 + obj.tCorr);
+            else
+                t = (1/(1-obj.material.tolerance))*t1;
+            end
+        end
+        
+        function t1 = calcT1(obj, operation)
+            % Returns t1 as defined in table 5-6.
+            % arg operation: boolean
             tFab = obj.material.tolerance * obj.t;
-            if operational
+            if operation
                 t1 = obj.t-tFab-obj.tCorr;
             else
                 t1 = obj.t-tFab;
             end
         end
         
-        function t2 = calcT2(obj, operational)
-            % Returns characteristic wall thickness as defined in table 5-6
-            % arg operational: boolean
-            if operational
+        function t2 = calcT2(obj, operation)
+            % Returns t2 as defined in table 5-6.
+            % arg operation: boolean
+            if operation
                 t2 = obj.t - obj.tCorr;
             else
                 t2 = obj.t;
