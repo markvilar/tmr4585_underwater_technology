@@ -57,6 +57,10 @@ classdef PipeSegment
             d = obj.Di;
         end
         
+        function d = getDiameter(obj)
+            d = obj.Di + 2*obj.t;
+        end
+        
         function [x, y] = getXY(obj, frac)
             if frac < 0
                 frac = 0;
