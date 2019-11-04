@@ -28,7 +28,6 @@ for i = 1:N
     Di = segment.getInnerDiameter();
     D = Di + segment.t;                 
     t_2 = segment.calcT2(operation);
-    
     beta = betaCalc(D,t_2);              
     alpha_c = alpha_cCalc(beta,fu,fy);
     Mp = MpCalc(fy,D,t_2);
