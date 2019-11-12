@@ -29,7 +29,8 @@ for i = 1:nSegs
         [gammaM, gammaSC] = segment.getResistFactors(fluidClass);
         Pe = Po - rhoE*g*min(y, 0);
         Ppr = 35*fy*alphaFab*(t2/D)^(2.5); % Eq. 5.16
-        result(j) = ~((Pe - Pmin) <= Ppr/(gammaM*gammaSC)); % Eq. 5.15
+        Pdiff = Pe - Pmin;
+        result(j) = ~(Pdiff <= Ppr/(gammaM*gammaSC)); % Eq. 5.15
     end
     results{i} = result;
 end

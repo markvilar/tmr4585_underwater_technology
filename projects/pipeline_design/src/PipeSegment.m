@@ -2,7 +2,7 @@ classdef PipeSegment
     properties
         startConn
         endConn
-        locClass % Location class, 1 = low, 2 = medium, 3 = high
+        locClass % Location class, 1 = low, 2 = high
         Di % Pipe wall inner diameter
         t % Pipe wall thickness
         ovality % Pipe wall ovality
