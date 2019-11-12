@@ -53,19 +53,24 @@ for n = 1:nSegs
     testSegmentSamplesM = MaxTestMomentSegments{n};
     testNoInternPSegmentSamplesM = MaxTestMomentSegmentsNoInternP{n};
     installSegmentSamplesM = MaxInstallationMomentSegments{n};
-    designSegmentMaxMoment(n) = max(designSegmentSamplesM);
-    designNoInternPSegmentMaxMoment(n) = max(designNoInternPSegmentSamplesM);
-    testSegmentMaxMoment(n) = max(testSegmentSamplesM);
-    testNoInternPSegmentMaxMoment(n) = max(testNoInternPSegmentSamplesM);
-    installationSegmentMaxMoment(n) = max(installSegmentSamplesM);
+    designSegmentMaxMoment(n) = min(designSegmentSamplesM);
+    designNoInternPSegmentMaxMoment(n) = min(designNoInternPSegmentSamplesM);
+    testSegmentMaxMoment(n) = min(testSegmentSamplesM);
+    testNoInternPSegmentMaxMoment(n) = min(testNoInternPSegmentSamplesM);
+    installationSegmentMaxMoment(n) = min(installSegmentSamplesM);
 end
 
 % Getting the critical bending moment for each of the conditions
-criticalBendingMomentDesign = max(designSegmentMaxMoment);
-criticalBendingMomentDesignNoInternP = max(designNoInternPSegmentMaxMoment);
-criticalBendingMomentTest = max(testSegmentMaxMoment);
-criticalBendingMomentTestNoInternP = max(testNoInternPSegmentMaxMoment);
-criticalBendingMomentInstallation = max(installationSegmentMaxMoment);
+[criticalBendingMomentDesign, designCritMomIdx] = ...
+    min(designSegmentMaxMoment);
+[criticalBendingMomentDesignNoInternP, designNoPCritMomIdx] = ...
+    min(designNoInternPSegmentMaxMoment);
+[criticalBendingMomentTest, testCritMomIdx] = ...
+    min(testSegmentMaxMoment);
+[criticalBendingMomentTestNoInternP, testNoPCritMomIdx] = ...
+    min(testNoInternPSegmentMaxMoment);
+[criticalBendingMomentInstallation, installCritMomIdx] = ...
+    min(installationSegmentMaxMoment);
 
  % Calculating the maximum spanning length for each segment
  designMaxSpanLengthSegment = zeros(nSegs, 1);
@@ -88,7 +93,24 @@ end
 [testNoInternPMaxSpanLength, testNoInternPMaxSpanLengthIndice] = min(testNoInternPMaxSpanLengthSegment);
 [installationMaxSpanLength, installationMaxSpanLengthIndice] = min(installationMaxSpanLengthSegment);
 
+varNames = {'condition', 'Mcrit', 'McritOcc', 'Lmax', 'LmaxOcc'};
+conditions = {'design', 'designNoP', 'test', 'testNoP', 'installation'};
+critMoms = [criticalBendingMomentDesign, ...
+    criticalBendingMomentDesignNoInternP, ...
+    criticalBendingMomentTest, ...
+    criticalBendingMomentTestNoInternP, ...
+    criticalBendingMomentInstallation];
+critMomOccs = [designCritMomIdx, designNoPCritMomIdx, testCritMomIdx, ...
+    testNoPCritMomIdx, installCritMomIdx];
+spanLengths = [designMaxSpanLength, designNoInternPMaxSpanLength, ...
+    testMaxSpanLength, testNoInternPMaxSpanLength, ...
+    installationMaxSpanLength];
+spanLengthOccs = [designMaxSpanLengthIndice, ...
+    designNoInternPaxSpanLengthIndice, testMaxSpanLengthIndice, ...
+    testNoInternPMaxSpanLengthIndice, installationMaxSpanLengthIndice];
 
+spanLengthResults = table(conditions(:), critMoms(:), critMomOccs(:), ...
+    spanLengths(:), spanLengthOccs(:), 'VariableNames',   varNames)
 
 function spanLength = calcMaxSpanLength(ws, maxMoment)
     spanLength = sqrt(12*(maxMoment/ws));

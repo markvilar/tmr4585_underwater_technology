@@ -32,7 +32,7 @@ classdef PipeSegment
             obj.rhoCorr = rhoCorr;
             obj.kCorr = kCorr;
             obj.tConcMin = tConcMin;
-            obj.tConc = -1;
+            obj.tConc = tConcMin;
             obj.rhoConc = rhoConc;
             obj.kConc = kConc;
         end
@@ -56,12 +56,16 @@ classdef PipeSegment
             fu = obj.material.SMTS*alphaU; % Equation 5.5
         end
         
-        function d = getInnerDiameter(obj)
-            d = obj.Di;
+        function Di = getInnerDiameter(obj)
+            Di = obj.Di;
         end
         
-        function d = getSteelDiameter(obj)
-            d = obj.Di + 2*obj.t;
+        function D = getSteelDiameter(obj)
+            D = obj.Di + 2*obj.t;
+        end
+        
+        function D = getConcDiameter(obj)
+            D = obj.Di + 2*obj.t + 2*obj.tConc;
         end
         
         function t = getSteelThickness(obj)
@@ -172,7 +176,14 @@ classdef PipeSegment
         
         function Isteel = calcISteel(obj)
             D = obj.getSteelDiameter();
-            Isteel = pi*D^4/64 - pi*obj.Di^4/64;
+            Di = obj.getInnerDiameter();
+            Isteel = pi*D^4/64 - pi*Di^4/64;
+        end
+        
+        function Iconc = calcIConc(obj)
+            D = obj.getConcDiameter();
+            Di = obj.getSteelDiameter();
+            Iconc = pi*D^4/64 - pi*Di^4/64;
         end
     end
 end
