@@ -1,2 +1,5 @@
+# Folders
 data/
-~/*.asv
+
+# Files
+*.asv
