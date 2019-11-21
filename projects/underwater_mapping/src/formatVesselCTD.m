@@ -2,7 +2,7 @@ clear all; clc;
 
 %% Results
 resultFolder = '../results';
-resultFile = 'CTD_vessel.csv';
+resultFile = 'CTD_gunnerus.csv';
 resultPath = strcat(resultFolder, '/', resultFile);
 
 %% Read vessel CTD data
