@@ -5,7 +5,7 @@ figuresFolder = '../figures';
 
 %% Read data
 dataFolder = '../results';
-dataFile = 'CTD_gunnerus.csv';
+dataFile = 'ctd_gunnerus.csv';
 dataPath = strcat(dataFolder, '/', dataFile);
 opts = detectImportOptions(dataPath);
 tableHead = preview(dataPath, opts);

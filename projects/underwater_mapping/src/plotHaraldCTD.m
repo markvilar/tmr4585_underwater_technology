@@ -5,7 +5,7 @@ figuresFolder = '../figures';
 
 %% Read data
 dataFolder = '../results';
-dataFile = 'CTD_harald_corrected.csv';
+dataFile = 'ctd_harald_corrected.csv';
 dataPath = strcat(dataFolder, '/', dataFile);
 opts = detectImportOptions(dataPath);
 tableHead = preview(dataPath, opts);
@@ -122,8 +122,18 @@ title(sprintf('Temperature vs. depth (depth binning of %.1f m)', ...
 %% Trajectory plot
 % Colors
 circleSize = 1;
-colors = repmat([1, 2, 3], numel(time), 1);
 
-% Scatter plot
-figure(10); clf;
-scatter3(latitude, longitude, depth, circleSize);
+% 3D salinity plot
+figure(4); clf;
+salColor = createRedBlueMap(salinity);
+scatter3(latitude, longitude, depth, circleSize, salColor);
+
+% 3D conductivity plot
+figure(5); clf;
+conColor = createRedBlueMap(conductivity);
+scatter3(latitude, longitude, depth, circleSize, conColor);
+
+% 3D temperature plot
+figure(6); clf;
+tempColor = createRedBlueMap(temperature);
+scatter3(latitude, longitude, depth, circleSize, tempColor);
