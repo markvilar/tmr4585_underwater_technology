@@ -1,10 +1,13 @@
 clear all; clc;
 
+%% Results
 resultFolder = '../results';
+resultFile = 'CTD_harald_corrected.csv';
+resultPath = strcat(resultFolder, '/', resultFile);
 
 %% Format Harald CTD data
 dataFolder = '../data/harald_csv/';
-fileName = 'CTD_geo.csv';
+fileName = 'CTD_raw.csv';
 filePath = strcat(dataFolder, '/', fileName);
 
 table = readtable(filePath);
@@ -29,4 +32,6 @@ temperature.Properties.VariableNames = {'temperature'};
 salinity.Properties.VariableNames = {'salinity'};
 
 table = [start altitude depth medium conductivity temperature salinity];
-writetable(table, 'CTD.csv');
+
+% Write to file
+writetable(table, resultPath);
